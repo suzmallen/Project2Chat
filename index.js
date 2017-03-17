@@ -6,7 +6,7 @@ var app = express();
 var pass = require('password-hash-and-salt');
 
 var pg = require("pg"); // This is the postgres database connection module.
-const connectionString = "postgres://Admin:pa55word@localhost:5432/chatroom";
+const connectionString = (process.env.DATABASE_URL||"postgres://Admin:pa55word@localhost:5432/chatroom");
 
 app.set('port', (process.env.PORT || 5035));
 
