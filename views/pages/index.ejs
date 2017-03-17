@@ -1,66 +1,255 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <% include ../partials/header.ejs %>
-</head>
+  <title>Family Chat</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    
+<style>
+html,
+body {
+  overflow-x: hidden; /* Prevent scroll on narrow devices */
+}
+body {
+  padding-top: 70px;
+}
+footer {
+  padding: 30px 0;
+}
 
+/*
+ * Off Canvas
+ * --------------------------------------------------
+ */
+@media screen and (max-width: 767px) {
+  .row-offcanvas {
+    position: relative;
+    -webkit-transition: all .25s ease-out;
+         -o-transition: all .25s ease-out;
+            transition: all .25s ease-out;
+  }
+  
+  .sidebar-offcanvas {
+    position: absolute;
+    width: 60%; /* 6 columns */
+    display: none;
+  }
+
+  .row-offcanvas-right {
+    right: 0;
+  }
+
+  .row-offcanvas-right.active
+  .sidebar-offcanvas {
+    display: block;  
+    right: 50px;
+    top: 50px;
+    z-index: 1;
+  }
+
+  .row-offcanvas-right.active {
+    
+  }
+    .icon-bar{
+        height: 3px;
+        color:white;
+    }
+    .btn-primary{
+        color:white;
+        font-size:70%;
+    }
+
+}
+    
+    </style>
+</head>
 <body>
 
-  <% include ../partials/nav.ejs %>
 
-<div class="jumbotron text-center">
-  <div class="container">
-    <a href="/" class="lang-logo">
-      <img src="/lang-logo.png">
-    </a>
-    <h1>Getting Started with Node on Heroku</h1>
-    <p>This is a sample Node application deployed to Heroku. It's a reasonably simple app - but a good foundation for understanding how to get the most out of the Heroku platform.</p>
-    <a type="button" class="btn btn-lg btn-default" href="https://devcenter.heroku.com/articles/getting-started-with-nodejs"><span class="glyphicon glyphicon-flash"></span> Getting Started with Node</a>
-    <a type="button" class="btn btn-lg btn-primary" href="https://github.com/heroku/node-js-getting-started"><span class="glyphicon glyphicon-download"></span> Source on GitHub</a>
-  </div>
-</div>
-<div class="container">
-  <div class="alert alert-info text-center" role="alert">
-    To deploy your own copy, and learn the fundamentals of the Heroku platform, head over to the <a href="https://devcenter.heroku.com/articles/getting-started-with-nodejs" class="alert-link">Getting Started with Node on Heroku</a> tutorial.
-  </div>
-  <hr>
-  <div class="row">
-    <div class="col-md-6">
-      <h3><span class="glyphicon glyphicon-info-sign"></span> How this sample app works</h3>
-      <ul>
-        <li>This app was deployed to Heroku, either using Git or by using <a href="https://github.com/heroku/node-js-getting-started">Heroku Button</a> on the repository.</li>
+<script>
+$(document).ready(function () {
+    
+  $('[data-toggle="offcanvas"]').click(function () {
+    $('.row-offcanvas').toggleClass('active')
+  });
+    
+});
+ 
+    
+function sendComment(){
+  var url;
+  var xhttp;
+  var userid= $('#hiddenUserID').val();
+  var sessionid= $('#hiddenSessionID').val(); 
+  var comment=$('#comment').val();
+    alert(comment);
+    url="/comment";   
+/*    
+  xhttp=new XMLHttpRequest();
+  xhttp.setRequestHeader( "Content-Type", "application/json");
+  xhttp.send(json.stringify(
+      {userid:userid, 
+       sessionid: sessionid,
+       comment: comment}));
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      cFunction(this);
+    }
+  };
+  xhttp.open("POST", url, true);
+  xhttp.send();*/
+}
 
-        <li>When Heroku received the source code, it fetched all the dependencies in the <a href="https://github.com/heroku/node-js-getting-started/blob/master/package.json">package.json</a>, creating a deployable slug.</li>
-        <li>The platform then spins up a dyno, a lightweight container that provides an isolated environment in which the slug can be mounted and executed.</li>
-        <li>You can scale your app, manage it, and deploy over <a href="https://addons.heroku.com/">150 add-on services</a>, from the Dashboard or CLI.</li>
-      </ul>
-    </div>
-    <div class="col-md-6">
-      <h3><span class="glyphicon glyphicon-link"></span> Next Steps</h3>
-      <ul>
-        <li>If you are following the <a href="https://devcenter.heroku.com/articles/getting-started-with-nodejs">Getting Started</a> guide, then please head back to the tutorial and follow the next steps!</li>
-        <li>If you deployed this app by deploying the Heroku Button, then in a command line shell, run:</li>
-        <ul>
-          <li><code>git clone https://github.com/heroku/node-js-getting-started.git</code> - this will create a local copy of the source code for the app</li>
-          <li><code>cd node-js-getting-started</code> - change directory into the local source code repository</li>
-          <li><code>heroku git:remote -a &lt;your-app-name></code> - associate the Heroku app with the repository</li>
-          <li>You'll now be set up to run the app locally, or <a href="https://devcenter.heroku.com/articles/getting-started-with-nodejs#push-local-changes">deploy changes</a> to Heroku</li>
+ 
+/*//AJAX REQUESTS    
+loadDoc("url-1", myFunction1);
+
+loadDoc("url-2", myFunction2);
+
+function loadDoc(url, cFunction) {
+  var xhttp;
+  xhttp=new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      cFunction(this);
+    }
+ };
+  xhttp.open("GET", url, true);
+  xhttp.send();
+}
+
+function myFunction1(xhttp) {
+  // action goes here
+}
+function myFunction2(xhttp) {
+  // action goes here
+}    */ 
+    
+    </script>    
+    
+<nav class="navbar navbar-fixed-top navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          
+          <a class="navbar-brand" href="#">Family Chat</a>
+        </div>
+        </div><!-- /.container -->
+    </nav><!-- /.navbar -->    
+    
+<div class="container-fluid">
+   
+    <div class="row row-offcanvas row-offcanvas-right">
+        <div class="col-xs-12 col-sm-9 col-sm-push-3">
+        
+         <p class="pull-right visible-xs ">
+            <button type="button" class="btn  btn-primary" data-toggle="offcanvas" title="Toggle sidebar">
+             Menu<i class="fa fa-chevron-left"></i>  
+            </button>
+          </p>
+          
+           <div class="row">
+              <h4>Leave a Comment:</h4>
+                <form role="form" method="post" action="/postmessage">
+                <div class="form-group col-sm-9">
+                  <input type="hidden" id="sessionid" name="sessionid" value="1">
+                  <input type="hidden" id="sessionuserid" name="sessionuserid" value="2">
+                     
+                  <textarea id="message" name="message" class="form-control" rows="3" required></textarea>
+                </div>
+                <div class="form-group col-sm-3"><button type="submit" class="btn btn-success" >Submit</button></div>
+              </form>
+
+              </div> 
+
+            <div class="row">   
+              <div class="panel">
+              <p><span class="badge">2</span> Messages:</p>
+              </div>
+            <!-- This is the section that contains all the messages -->    
+              <div class="well well-sm pre-scrollable">
+
+                <!-- This is a comment loop through all comments and create one section per comment-->    
+                <div class="panel  panel-success">
+                    <div class="panel-body panel-success">
+                        <div class="col-sm-2 text-center">
+                          <img src="bandmember.jpg" class="img-circle" height="65" width="65" alt="Avatar">
+                        </div>
+                        <div class="col-sm-10">
+                          <h4>Anja <small>Sep 29, 2015, 9:12 PM</small></h4>
+                          <p>Keep up the GREAT work! I am cheering for you!! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                          <br>
+                        </div>
+                    </div>
+                </div>
+
+
+                  <!-- This is a comment loop through all comments and create one section per comment-->    
+                <div class="panel  panel-success">
+                    <div class="panel-body panel-success">
+                        <div class="col-sm-2 text-center">
+                          <img src="bandmember.jpg" class="img-circle" height="65" width="65" alt="Avatar">
+                        </div>
+                        <div class="col-sm-10">
+                          <h4>Anja <small>Sep 29, 2015, 9:12 PM</small></h4>
+                          <p>Keep up the GREAT work! I am cheering for you!! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                          <br>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="panel  panel-success">
+                    <div class="panel-body ">
+                        <div class="col-sm-2 text-center">
+                          <img src="bandmember.jpg" class="img-circle" height="65" width="65" alt="Avatar">
+                        </div>
+                        <div class="col-sm-10">
+                          <h4>Anja <small>Sep 29, 2015, 9:12 PM</small></h4>
+                          <p>Keep up the GREAT work! I am cheering for you!! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                          <br>
+                        </div>
+                    </div>
+                </div>
+            </div>    
+        
+            </div>
+            </div>
+       
+      
+      <div class="col-xs-6 col-sm-3 col-sm-pull-9 sidebar-offcanvas" id="sidebar">
+        <ul id="menu-content" class="nav nav-pills nav-stacked">
+            <li class="active"><a href="#section1">Home</a></li>
+        <li class="active"><a href="#section2">Chat Members</a>
+          <br>
+          <ul class="nav nav-pills nav-stacked">
+              <li class="list-group-item"><a href="#section3">Add Member</a>
+              </li>
+            <li class="list-group-item">Family member1
+              </li>
+            <li class="list-group-item">Family member2
+            
+              </li>
+            <li class="list-group-item">
+              </li>
+            </ul></li>
+        <li class="active"><a href="#section3">Leave Chat</a></li>
         </ul>
-      </ul>
-      <h3><span class="glyphicon glyphicon-link"></span> Helpful Links</h3>
-      <ul>
-        <li><a href="https://www.heroku.com/home">Heroku</a></li>
-        <li><a href="https://devcenter.heroku.com/">Heroku Dev Center</a></li>
-        <li><a href="https://devcenter.heroku.com/articles/getting-started-with-nodejs">Getting Started with Node on Heroku</a></li>
-        <li><a href="https://devcenter.heroku.com/articles/deploying-nodejs">Deploying Node Apps on Heroku</a></li>
-      </ul>
     </div>
-  </div> <!-- row -->
-   <div class="alert alert-info text-center" role="alert">
-    Please do work through the Getting Started guide, even if you do know how to build such an application.  The guide covers the basics of working with Heroku, and will familiarize you with all the concepts you need in order to build and deploy your own apps.
-  </div>
-</div>
+   <!-- BELOW is the end of the whole page's div -->
 
+     </div>
+         <!-- BELOW is the end of the entire comment section div -->
+    </div>  
+    
+ <!-- BELOW is the end of the fluidcontainer div -->    
+
+
+<footer class="container-fluid">
+  <p>Footer Text</p>
+</footer>
 
 </body>
 </html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Family Chat</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    
+<style>
+html,
+body {
+  overflow-x: hidden; /* Prevent scroll on narrow devices */
+}
+body {
+  padding-top: 70px;
+}
+footer {
+  padding: 30px 0;
+}
+
+/*
+ * Off Canvas
+ * --------------------------------------------------
+ */
+@media screen and (max-width: 767px) {
+  .row-offcanvas {
+    position: relative;
+    -webkit-transition: all .25s ease-out;
+         -o-transition: all .25s ease-out;
+            transition: all .25s ease-out;
+  }
+  
+  .sidebar-offcanvas {
+    position: absolute;
+    width: 60%; /* 6 columns */
+    display: none;
+  }
+
+  .row-offcanvas-right {
+    right: 0;
+  }
+
+  .row-offcanvas-right.active
+  .sidebar-offcanvas {
+    display: block;  
+    right: 50px;
+    top: 50px;
+    z-index: 1;
+  }
+
+  .row-offcanvas-right.active {
+    
+  }
+    .icon-bar{
+        height: 3px;
+        color:white;
+    }
+    .btn-primary{
+        color:white;
+        font-size:70%;
+    }
+
+}
+    
+    </style>
+</head>
+<body>
+<script>
+    getInfo();
+    
+    function getInfo(){
+        
+        $('#friends').empty();
+        var url = "/getfriends";
+        $.get( url, function( data ) {
+            var friends = data;
+            console.log(data);
+            $.each(friends, function (index, value) {
+                $('#friends').append($('<option/>', { 
+                    value: friends[index].userid,
+                    text : friends[index].fname+ ' ' + friends[index].lname 
+                }));
+            }); 
+            $('#friends option:first').prop('selected', true);     
+                 // $('#friends').append("<option  value='" + data[i].userid + ">" + data[i].fname + " " + data[i].lname + "</option>");
+                      
+           // alert( "friends were loaded" );
+            });
+        
+    }   
+    
+    function createChat(){
+        
+        var participants = $('#selectFriends option');
+
+        var values = $.map(participants ,function(participants) {
+        return participants.value;
+        });
+        
+    $.ajax({
+        url: '/addnewchat',
+        type: 'POST',
+        data: { 
+                sessionname: $('#sessionname').val(), 
+                invitation: $('#invitation').val(), 
+                participants: values
+            },
+        success: function(result) {
+            //alert(result);
+            window.location.href = "/joinchat";
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert( "err--" + XMLHttpRequest.status + " -- " + XMLHttpRequest.statusText);
+        }
+        });
+         
+    }
+    
+    function addParticipant(){
+        var selectedValue = $('#friends :selected').val(); 
+        var selectedText =  $('#friends :selected').text();  
+        $('#selectFriends').append('<option value="' + selectedValue + '">' + selectedText + '</option>')
+        $('#friends :selected').remove(); 
+        $('#friends option:first').prop('selected', true); 
+         $('#selectFriends option[value=' + selectedValue + ']').attr('selected','selected');
+           }
+    
+    function removeParticipant(){
+        var selectedValue = $('#selectFriends :selected').val(); 
+        var selectedText =  $('#selectFriends :selected').text();  
+        $('#friends').append('<option value="' + selectedValue + '">' + selectedText + '</option>')
+        $('#selectFriends :selected').remove();  
+        $('#selectFriends option:first').prop('selected', true);
+         $('#friends option[value=' + selectedValue + ']').attr('selected','selected');
+    }
+    
+    </script>    
+    <nav class="navbar navbar-fixed-top navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          
+          <a class="navbar-brand" href="#">Family Chat</a>
+        </div>
+        </div><!-- /.container -->
+    </nav><!-- /.navbar -->    
+<div class="container">    
+
+   
+              
+    <div class="row">
+                                
+        <div class="col-lg-12">
+                                    
+             <label for="sessionname">Create a 3-10 Digit Chat Identifier:</label><input type="text" maxlength="10" size="10" id="sessionname" name="sessionname" placeholder="(i.e MOM01)"/> <br><br>
+                                                                                        
+            <label>Invitation Message</label>
+            <textarea id="invitation" name="invitation" cols="40" rows="3"></textarea><br><br>
+             
+            <div class="container">
+                        <label for="friends">Add Participants</label>
+                        <div class="row">
+                        <div class="col-lg-2">
+                            <select class="form-control" size="10" id="friends" name="friends">
+                                                
+                            </select>
+                        </div>
+                        <div class="col-lg-1 text-center">
+                            <button id="btnAdd" class="btn btn-primary" onclick="addParticipant()">&gt;&gt;</button>
+                            <br><br><br>
+                                                
+                            <button id="btnRemove" class="btn btn-primary" onclick="removeParticipant()">&lt;&lt;</button>
+                                                
+                        </div>
+                                            
+                        <div class="col-lg-2">
+                            <select size="10" class="form-control" id="selectFriends" name="selectFriends">
+                            </select>
+                        </div>
+                </div>
+        </div>    
+                                            
+        <br>                                   
+                                        
+        <input type="hidden" name="id" value=""/>
+            <button class="btn btn-success" onclick="createChat();">Create Chat</button> 
+        </div>                        
+                                       
+    </div>                               
+                                  
+    </div>            
+    <!-- container -->
+    </body>
+</html>

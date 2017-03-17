@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Family Chat Sign-up</title>
+    
+        
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+
+    <style>
+     .vcenter {
+    
+    vertical-align: middle;
+    float: left;
+         display:inline-block;
+         margin:0px;
+}
+        .fawidth {
+    width:10px;
+    height:10px;
+}
+        body {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+       
+    </style>
+   
+    </head><body>
+     
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          
+         <a href=""><h3>Family Chat</h3></a> 
+        </div>
+        </div><!-- /.container -->
+            </nav><!-- /.navbar -->    
+    <br>
+    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="login-panel panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Enter a User Name and Password</h3>
+                    </div>
+                    <?php 
+                    if (isset($message)){
+                        echo $message;
+                    } 
+                     if (isset($errormessage)){
+                        echo $errormessage;
+                    } ?>                   
+                    
+                    <div class="panel-body">
+                        <form role="form" action="/addaccount" method="post">
+                            <fieldset>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="First Name" name="fname" id="fname" type="text" autofocus>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="Last Name" name="lname" id="lname" type="text" autofocus>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="User Name" name="username" type="text" autofocus>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="Enter a Password" name="password" id="password" type="password" value="">
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="Re-type the Password" name="vpassword" id="vpassword" type="password" value="">
+                                </div>
+                                <div id="divCheckPasswordMatch" style="color:red;"></div>
+                                <input type="submit" class="btn btn-lg btn-success btn-block" value="Create Account"/><br>
+                                
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+$(document).ready(function() {
+   $('#password,#vpassword').keyup(checkPasswordsMatch); 
+});
+    
+function checkPasswordsMatch() {
+    var password = $('#password').val();
+    var vpassword = $('#vpassword').val();
+    
+    if (password != confirmPassword){
+        $('#divCheckPasswordMatch').html("Passwords do not match!");
+    }else{
+        $('#divCheckPasswordsMatch').html("Passwords match");
+    }
+    
+}    
+    </script>
+
+</body>
+
+</html>

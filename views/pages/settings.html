@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Family Chat</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    
+<style>
+html,
+body {
+  overflow-x: hidden; /* Prevent scroll on narrow devices */
+}
+body {
+  padding-top: 70px;
+}
+footer {
+  padding: 30px 0;
+}
+
+/*
+ * Off Canvas
+ * --------------------------------------------------
+ */
+@media screen and (max-width: 767px) {
+  .row-offcanvas {
+    position: relative;
+    -webkit-transition: all .25s ease-out;
+         -o-transition: all .25s ease-out;
+            transition: all .25s ease-out;
+  }
+  
+  .sidebar-offcanvas {
+    position: absolute;
+    width: 60%; /* 6 columns */
+    display: none;
+  }
+
+  .row-offcanvas-right {
+    right: 0;
+  }
+
+  .row-offcanvas-right.active
+  .sidebar-offcanvas {
+    display: block;  
+    right: 50px;
+    top: 50px;
+    z-index: 1;
+  }
+
+  .row-offcanvas-right.active {
+    
+  }
+    .icon-bar{
+        height: 3px;
+        color:white;
+    }
+    .btn-primary{
+        color:white;
+        font-size:70%;
+    }
+
+}
+    
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-fixed-top navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          
+          <a class="navbar-brand" href="#">Family Chat</a>
+        </div>
+        </div><!-- /.container -->
+    </nav><!-- /.navbar -->    
+<div class="container">    
+
+
+ 
+
+    <div class="row">
+    <h4>You are not associated with any schools.  Please select a school.</h4>
+                                
+        <div class="col-lg-6">
+                                    
+            <form role="form" action="adduserschool.php" method="post" class="form-inline">
+                                        
+                                        <div class="form-group">
+                                            <label>School</label>
+                                            <select class="form-control" id="schoolid" name="schoolid">
+                                                <?php foreach ($allschools as $school){
+                                                      $schoolid = $school['school_id'];
+                                                      $schoolname= $school['school_name'];
+                                                    if ($bookfair['school_id'] == $schoolid) {
+                                                        $selected = "selected";
+                                                    }
+                                                    else{
+                                                        $selected = "";
+                                                    }
+                                                    
+                                                    echo "<option  value='$schoolid' $selected>$schoolname</option>";
+                                                    }?>
+                                               
+                                            </select>
+                                        </div><br><br>
+                                       
+                                        <input type="hidden" name="id" value="<?php echo $userid;?>">
+                                        <input type="submit" value="Add School">
+                                    
+            </form>
+                                    
+                                        
+                                       
+                                
+        </div>
+                                <!-- /.col-lg-6 (nested) -->
+    
+        <div class="col-lg-6">
+                                    
+            <form role="form" class="form-inline">
+                                        
+                                        <div class="form-group">
+                                            <label>My Schools:</label>
+                                            <select multiple size="3" class="form-control" id="myschools" name="myschool">
+                                                <option  value='$schoolid' $selected>$schoolname</option>
+                                                
+                                               
+                                            </select>
+                                        </div><br><br>
+        
+                                    
+            </form>
+                                    
+                                        
+                                       
+                                
+        </div>
+                                <!-- /.col-lg-6 (nested) -->
+                            
+    </div>
+                            <!-- /.row (nested) -->
+    </div>
+    <!-- container -->
+    </body>
+</html>
