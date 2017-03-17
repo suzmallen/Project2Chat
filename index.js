@@ -133,6 +133,8 @@ app.post('/addnewchat',function(request, response){
                 for(i=0;i<participants.length;i++){
                     addChatParticipant(result, participants[i]);  
                     }
+                response.status(200).json({success:true, data:"success"});
+               
             }
      });
 });
