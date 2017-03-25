@@ -137,9 +137,10 @@ app.post('/login', function(request,response){
 //email comes from HTML page.
   validatePassword(username,password, function(error, validated, user){
       
-      console.log("Login success:" + validated);
+      
       
       if(validated){
+          console.log("Login success:" + validated);
           request.session.user = user.name;
           request.session.loggedIn = true;
           request.session.userid = user.userid;
@@ -331,7 +332,8 @@ function  validatePassword(username,password, callback){
 				console.log(err);
 				callback(err, null);
 			} else{
-                console.log("Found result: " + JSON.stringify(result.rows));
+                if (result)
+{                console.log("Found result: " + JSON.stringify(result.rows));
                 //verify the hashed password
                 bcrypt.compare(password, result.rows[0].password, function(error, verified) {
                     console.log("error:" + error);
@@ -348,7 +350,9 @@ function  validatePassword(username,password, callback){
                        
                     });
                               
-                
+              }  else{
+                  callback("User Does not Exist",false);
+              }
             }
 
 			//

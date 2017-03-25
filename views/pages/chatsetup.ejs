@@ -92,30 +92,31 @@ footer {
     }   
     
     function createChat(){
-        
         var participants = $('#selectFriends option');
-
         var values = $.map(participants ,function(participants) {
         return participants.value;
         });
-        
-    $.ajax({
-        url: '/addnewchat',
-        type: 'POST',
-        data: { 
-                sessionname: $('#sessionname').val(), 
-                invitation: $('#invitation').val(), 
-                participants: values
-            },
-        success: function(result) {
-            //alert(result);
-            window.location.href = "/joinchat";
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown) {
-            alert( "err--" + XMLHttpRequest.status + " -- " + XMLHttpRequest.statusText);
-        }
-        });
-         
+        if($('#sessionname').val()=="" || $('#invitation').val()=="" || values.length<1){
+            alert("Please fill in all the fields");} 
+        else{
+                
+            $.ajax({
+                url: '/addnewchat',
+                type: 'POST',
+                data: { 
+                        sessionname: $('#sessionname').val(), 
+                        invitation: $('#invitation').val(), 
+                        participants: values
+                    },
+                success: function(result) {
+                    //alert(result);
+                    window.location.href = "/joinchat";
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    alert( "err--" + XMLHttpRequest.status + " -- " + XMLHttpRequest.statusText);
+                }
+                });
+            }
     }
     
     function addParticipant(){
@@ -153,10 +154,10 @@ footer {
                                 
         <div class="col-lg-12">
                                     
-             <label for="sessionname">Create a 3-10 Digit Chat Identifier:</label><input type="text" maxlength="10" size="10" id="sessionname" name="sessionname" placeholder="(i.e MOM01)"/> <br><br>
+             <label for="sessionname">Create a 3-10 Digit Chat Identifier:</label><input required type="text" maxlength="10" size="10" id="sessionname" name="sessionname" placeholder="(i.e MOM01)"/> <br><br>
                                                                                         
             <label>Invitation Message</label>
-            <textarea id="invitation" name="invitation" cols="40" rows="3"></textarea><br><br>
+            <textarea required id="invitation" name="invitation" cols="40" rows="3"></textarea><br><br>
              
             <div class="container">
                         <label for="friends">Add Participants</label>
