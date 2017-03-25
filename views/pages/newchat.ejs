@@ -67,6 +67,24 @@ footer {
     </style>
 </head>
 <body>
+    <script>
+    getInfo();
+    
+    function getInfo(){
+        
+        $('#chats').empty();
+        var url = "/getchats";
+        $.get( url, function( data ) {
+            var chats = data;
+            console.log(data[0]);
+            $.each(chats, function (index, value) {
+                $('#chats').append($('<li><a href="/chat?id='+ chats[index].sessionuserid + '&sessionid=' + chats[index].sessionid + '">' + chats[index].sessionname + '</a></li>'));
+            }); 
+            //alert("chats were loaded");
+            });
+        
+    }   
+    </script>
     <nav class="navbar navbar-fixed-top navbar-inverse">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -92,15 +110,10 @@ footer {
                             Select Chat
                         </div>
                         <div class="panel-body">
-                            <ul><li><a href="setfair.php?id=">
-                                       ChatA</a>Put Window that opens password window here</li>
-
-                                    
-                                <li><a href="">
-                                   CHAT B</a></li>
+                            <ul id="chats">
                                                                      
                             </ul>
-                    <br><a href="index.php?action=addfair">Start a New Chat</a>    
+                    <br><a href="/chatsetup">Start a New Chat</a>    
                     </div>
                         <!-- /.panel-body -->
                     </div>
