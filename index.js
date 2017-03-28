@@ -5,8 +5,59 @@ var multer = require('multer'); // v1.0.5
 var upload = multer(); // for parsing multipart/form-data
 var app = express();
 var bcrypt = require('bcrypt');
+var http = require('http');
 const saltRounds = 10;
+var myserver = http.createServer(app);
+app.set('port', (process.env.PORT || 8080));
+//myserver.listen().address().address
 
+const url = require('url');
+const WebSocket = require('ws');
+
+//app.use(function (req, res, next) {
+ // res.send({ msg: "hello" });
+ //   next();
+//});
+
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
+
+wss.on('connection', function connection(ws) {
+  const location = url.parse(ws.upgradeReq.url, true);
+  // You might use location.query.access_token to authenticate or share sessions
+  // or ws.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
+
+  ws.on('message', function incoming(message) {
+    console.log('received: %s', message);
+  });
+
+  ws.send('Connected');
+});
+
+//BROADCASTING STUFF
+// Broadcast to all.
+wss.broadcast = function broadcast(data) {
+  wss.clients.forEach(function each(client) {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send("update");
+    }
+  });
+};
+
+wss.on('connection', function connection(ws) {
+  ws.on('message', function incoming(data) {
+    // Broadcast to everyone else.
+    wss.clients.forEach(function each(client) {
+      if (client !== ws && client.readyState === WebSocket.OPEN) {
+        client.send("update");
+      }
+    });
+  });
+});
+
+server.listen(app.get('port'), function listening() {
+  console.log('Listening on %d', server.address().port);
+});
 
 app.use(session({
   cookieName: 'session',
@@ -16,12 +67,10 @@ app.use(session({
 }));
 
 
-
-
 var pg = require("pg"); // This is the postgres database connection module.
 const connectionString = (process.env.DATABASE_URL||"postgres://Admin:pa55word@localhost:5432/chatroom");
 
-app.set('port', (process.env.PORT || 5035));
+
 
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json()); // for parsing application/json
@@ -35,7 +84,7 @@ app.set('view engine', 'ejs');
 
 var checkLogin = function (req, res, next) {
     
-  console.log('checking login info:' + req.url);
+  //console.log('checking login info:' + req.url);
   if (req.url=='/login'||req.url=='/signin'||req.url=='/signup'||req.url=='/addaccount'){
       next();
   } else{       
@@ -43,9 +92,10 @@ var checkLogin = function (req, res, next) {
     
         //req.session.user = user;  //refresh the session value
         req.session.loggedIn = true;
-      console.log("the person is logged in");
+     console.log("the person is logged in");
        next();
       }else{
+          console.log("the person is not logged in - redirecting...");
           var params = {"message":""};
           res.render('pages/login',params);
       }
@@ -81,6 +131,12 @@ app.get('/getmessages', function(request, response) {
         response.status(200).json(result);
     });
     
+});
+
+app.get('/getsessiondata', function(request,response){
+    getSessionInfofromDB(request.query.sessionuserid, function(error, result){
+       response.status(200).json(result); 
+    });
 });
 
 app.get('/getchats', function(request, response) {
@@ -157,6 +213,12 @@ app.post('/login', function(request,response){
 app.get('/signin',function(request,response){
     var params = {"message":""};
      response.render('pages/login',params); 
+});
+
+
+app.get('/login',function(request,response){
+    var params = {message:""};
+    response.render('pages/login',params);
 });
 
 
@@ -300,9 +362,12 @@ app.post('/postmessage',function(request,response){
 
 
 
-app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
-});
+
+//app.listen(app.get('port'), function() {
+//  console.log('Node app is running on port', app.get('port'));
+    
+//});
+
 
 
 function  validatePassword(username,password, callback){
@@ -577,7 +642,7 @@ function getChatsFromDb(id, callback){
 				callback(err, null);
 			}
 
-			console.log("Found result: " + JSON.stringify(result.rows));
+			//console.log("Found result: " + JSON.stringify(result.rows));
 
 			// call whatever function the person that called us wanted, giving it
 			// the results that we have been compiling
@@ -585,6 +650,45 @@ function getChatsFromDb(id, callback){
 		});
 	});
  
+}
+
+function getSessionInfofromDB(id, callback){
+    console.log("Getting session info from database with sessionuserid: " + id);
+
+	var client = new pg.Client(connectionString);
+
+	client.connect(function(err) {
+		if (err) {
+			console.log("Error connecting to DB: ")
+			console.log(err);
+			callback(err, null);
+		}
+
+		var sql = "SELECT c.fname, c.lname, cs.sessionname FROM chatuser c inner join sessionuser su on c.userid = su.userid " + 
+                  "inner join chatsession cs on cs.sessionid = su.sessionid  " + 
+                  "WHERE su.sessionuserid = $1::int ";
+		var params = [id];
+
+		var query = client.query(sql, params, function(err, result) {
+			// we are now done getting the data from the DB, disconnect the client
+			client.end(function(err) {
+				if (err) throw err;
+			});
+
+			if (err) {
+				console.log("Error in query: ")
+				console.log(err);
+				callback(err, null);
+			}
+
+			//console.log("Found result: " + JSON.stringify(result.rows));
+
+			// call whatever function the person that called us wanted, giving it
+			// the results that we have been compiling
+			callback(null, result.rows[0]);
+		});
+	});
+
 }
 
 function getMessagesFromDb(id, callback) {
@@ -616,7 +720,7 @@ function getMessagesFromDb(id, callback) {
 				callback(err, null);
 			}
 
-			console.log("Found result: " + JSON.stringify(result.rows));
+			//console.log("Found result: " + JSON.stringify(result.rows));
 
 			// call whatever function the person that called us wanted, giving it
 			// the results that we have been compiling
@@ -653,7 +757,7 @@ function getfriendsfromDB(callback){
 				callback(err, null);
 			}
 
-			console.log("Found result: " + JSON.stringify(result.rows));
+			//console.log("Found result: " + JSON.stringify(result.rows));
 
 			// call whatever function the person that called us wanted, giving it
 			// the results that we have been compiling
@@ -690,7 +794,7 @@ function getSessionfriendsfromDB(sessionid,callback){
 				callback(err, null);
 			}
 
-			console.log("Found result: " + JSON.stringify(result.rows));
+			//console.log("Found result: " + JSON.stringify(result.rows));
 
 			// call whatever function the person that called us wanted, giving it
 			// the results that we have been compiling
