@@ -19,45 +19,72 @@ const WebSocket = require('ws');
  //   next();
 //});
 
-const server = http.createServer(app);
+
+
+const server = http.createServer(app); //removed for heroku
+//app.use((req, res) => res.sendFile(INDEX) )
+
+
 const wss = new WebSocket.Server({ server });
 
-wss.on('connection', function connection(ws) {
-  const location = url.parse(ws.upgradeReq.url, true);
-  // You might use location.query.access_token to authenticate or share sessions
-  // or ws.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
+//const wss = new SocketServer({ server });
+//const server = express()
 
-  ws.on('message', function incoming(message) {
-    console.log('received: %s', message);
-  });
-
-  ws.send('Connected');
-});
-
-//BROADCASTING STUFF
-// Broadcast to all.
-wss.broadcast = function broadcast(data) {
-  wss.clients.forEach(function each(client) {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send("update");
-    }
-  });
-};
-
-wss.on('connection', function connection(ws) {
-  ws.on('message', function incoming(data) {
-    // Broadcast to everyone else.
-    wss.clients.forEach(function each(client) {
+wss.on('connection', (ws) => {
+  console.log('Client connected');
+    ws.send('Connected');
+  ws.on('close', () => console.log('Client disconnected'));
+  ws.on('message',  function incoming(data)  {
+          wss.clients.forEach(function each(client) {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
         client.send("update");
       }
     });
   });
 });
+ 
+////commented out to follow heroku instructions
+//wss.on('connection', function connection(ws) {
+//  const location = url.parse(ws.upgradeReq.url, true);
+    
+    
+  // You might use location.query.access_token to authenticate or share sessions
+  // or ws.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
 
-server.listen(app.get('port'), function listening() {
-  console.log('Listening on %d', server.address().port);
-});
+//  ws.on('message', function incoming(message) {
+//    console.log('received: %s', message);
+//  });
+//ws.send('Connected');
+//  
+//});
+
+//BROADCASTING STUFF
+// Broadcast to all.
+//wss.broadcast = function broadcast(data) {
+//  wss.clients.forEach(function each(client) {
+//    if (client.readyState === WebSocket.OPEN) {
+//      client.send("update");
+//    }
+//  });
+//};
+
+
+////commented out for heroku
+//wss.on('connection', function connection(ws) {
+//  ws.on('message', function incoming(data) {
+//    // Broadcast to everyone else.
+//    wss.clients.forEach(function each(client) {
+//      if (client !== ws && client.readyState === WebSocket.OPEN) {
+//        client.send("update");
+//      }
+//    });
+//  });
+//});
+
+server.listen(app.get('port'), () => console.log('Listening on %d', server.address().port ));
+//server.listen(app.get('port'), function listening() {
+//  console.log('Listening on %d', server.address().port);
+//});
 
 app.use(session({
   cookieName: 'session',
