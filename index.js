@@ -29,19 +29,22 @@ const wss = new WebSocket.Server({ server });
 
 //const wss = new SocketServer({ server });
 //const server = express()
-
 wss.on('connection', (ws) => {
   console.log('Client connected');
     ws.send('Connected');
   ws.on('close', () => console.log('Client disconnected'));
   ws.on('message',  function incoming(data)  {
+      console.log('message received')
           wss.clients.forEach(function each(client) {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
         client.send("update");
+          console.log ("broadcasting to client");
+          //console.log (client);
       }
     });
   });
 });
+
  
 ////commented out to follow heroku instructions
 //wss.on('connection', function connection(ws) {

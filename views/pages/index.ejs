@@ -144,6 +144,26 @@ footer {
             <br></li>
         <li class="active"><a href="/joinchat">Leave Chat</a></li>
         </ul>
+          <script>
+              
+function addFriend(userid){
+    var url="/addsessionfriend";   
+    var sessionid = $('#sessionid').val();
+    var xhttp=new XMLHttpRequest();
+      xhttp.open("POST", url, true);   
+      xhttp.setRequestHeader( "Content-Type", "application/json");
+      xhttp.send(JSON.stringify(
+          {"sessionid": sessionid,
+           "userid": userid}));
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+              console.log(xhttp.response);
+            location.reload(); 
+      }
+  }
+}      
+          
+          </script>
           
     </div>
    <!-- BELOW is the end of the whole page's div -->
@@ -158,6 +178,10 @@ footer {
     
 $(document).ready(function () {
     //var ws = new WebSocket('ws://localhost:8080');
+    
+    
+    
+  
     
     var HOST = location.origin.replace(/^http/, 'ws')
     var ws = new WebSocket(HOST);
@@ -174,6 +198,8 @@ $(document).ready(function () {
          //alert(msg.data);
         if (msg.data == "update") {
             //alert(msg.data);
+            //wait a couple seconds for update to take place, and then update
+            wait(2000);
             loadDoc(("/getmessages?id="+ $('#sessionid').val()) , loadMessages);
         }
          
@@ -197,24 +223,15 @@ $(document).ready(function () {
     $('.row-offcanvas').toggleClass('active')
   });
     
-    function addFriend(userid){
-    var url="/addsessionfriend";   
-    var sessionid = $('#sessionid').val();
-    var xhttp=new XMLHttpRequest();
-  xhttp.open("POST", url, true);   
-  xhttp.setRequestHeader( "Content-Type", "application/json");
-  xhttp.send(JSON.stringify(
-      {"sessionid": sessionid,
-       "userid": userid}));
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-          console.log(xhttp.response);
-        location.reload(); 
-      }
+  
+    function wait(ms){
+   var start = new Date().getTime();
+   var end = start;
+   while(end < start + ms) {
+     end = new Date().getTime();
   }
-  
-  
-}    
+}
+    
     
 $('#sendcomment').click(function() {
     ws.send('update');
@@ -285,6 +302,9 @@ function loadDoc(url, cFunction) {
   xhttp.send();
 }
 
+    
+  
+    
 function loadUserSession(xhttp){
     var data = JSON.parse(xhttp.response);
     $('#username').text(data.fname + ' ' + data.lname);
