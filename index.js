@@ -9,21 +9,11 @@ var http = require('http');
 const saltRounds = 10;
 var myserver = http.createServer(app);
 app.set('port', (process.env.PORT || 8080));
-//myserver.listen().address().address
 
 const url = require('url');
 const WebSocket = require('ws');
 
-//app.use(function (req, res, next) {
- // res.send({ msg: "hello" });
- //   next();
-//});
-
-
-
-const server = http.createServer(app); //removed for heroku
-//app.use((req, res) => res.sendFile(INDEX) )
-
+const server = http.createServer(app); 
 
 const wss = new WebSocket.Server({ server });
 
@@ -45,49 +35,7 @@ wss.on('connection', (ws) => {
   });
 });
 
- 
-////commented out to follow heroku instructions
-//wss.on('connection', function connection(ws) {
-//  const location = url.parse(ws.upgradeReq.url, true);
-    
-    
-  // You might use location.query.access_token to authenticate or share sessions
-  // or ws.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
-
-//  ws.on('message', function incoming(message) {
-//    console.log('received: %s', message);
-//  });
-//ws.send('Connected');
-//  
-//});
-
-//BROADCASTING STUFF
-// Broadcast to all.
-//wss.broadcast = function broadcast(data) {
-//  wss.clients.forEach(function each(client) {
-//    if (client.readyState === WebSocket.OPEN) {
-//      client.send("update");
-//    }
-//  });
-//};
-
-
-////commented out for heroku
-//wss.on('connection', function connection(ws) {
-//  ws.on('message', function incoming(data) {
-//    // Broadcast to everyone else.
-//    wss.clients.forEach(function each(client) {
-//      if (client !== ws && client.readyState === WebSocket.OPEN) {
-//        client.send("update");
-//      }
-//    });
-//  });
-//});
-
 server.listen(app.get('port'), () => console.log('Listening on %d', server.address().port ));
-//server.listen(app.get('port'), function listening() {
-//  console.log('Listening on %d', server.address().port);
-//});
 
 app.use(session({
   cookieName: 'session',
