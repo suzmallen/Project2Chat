@@ -1,392 +1,393 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <title>Family Chat</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    
-<style>
-html,
-body {
-  overflow-x: hidden; /* Prevent scroll on narrow devices */
-}
-body {
-  padding-top: 70px;
-}
-footer {
-  padding: 30px 0;
-}
-    .empty{
-        
-    }
 
-/*
+<head>
+    <title>Family Chat</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style>
+    html,
+        body {
+            overflow-x: hidden;
+            /* Prevent scroll on narrow devices */
+        }
+        
+        body {
+            padding-top: 70px;
+        }
+        
+        footer {
+            padding: 30px 0;
+        }
+        
+        .empty {}
+        /*
  * Off Canvas
  * --------------------------------------------------
  */
-@media screen and (max-width: 767px) {
-  .row-offcanvas {
-    position: relative;
-    -webkit-transition: all .25s ease-out;
-         -o-transition: all .25s ease-out;
-            transition: all .25s ease-out;
-    
-      
-      
-      }    
-    
-  }
-  
-  .sidebar-offcanvas {
-    position: absolute;
-    width: 60%; /* 6 columns */
-    display: none;
-  }
-
-  .row-offcanvas-right {
-    right: 0;
-  }
-
-  .row-offcanvas-right.active
-  .sidebar-offcanvas {
-    display: block;  
-    right: 50px;
-    top: 50px;
-    z-index: 1;
-  }
-
-  .row-offcanvas-right.active {
-    
-  }
-    .icon-bar{
-        height: 3px;
-        color:white;
-    }
-    .btn-primary{
-        color:white;
-        font-size:70%;
+        
+        @media screen and (max-width: 767px) {
+            .row-offcanvas {
+                position: relative;
+                -webkit-transition: all .25s ease-out;
+                -o-transition: all .25s ease-out;
+                transition: all .25s ease-out;
+            }
+        }
+        
+        .sidebar-offcanvas {
+            position: absolute;
+            width: 60%;
+            /* 6 columns */
+            display: none;
+        }
+        
+        .row-offcanvas-right {
+            right: 0;
+        }
+        
+        .row-offcanvas-right.active .sidebar-offcanvas {
+            display: block;
+            right: 50px;
+            top: 50px;
+            z-index: 1;
+        }
+        
+        .row-offcanvas-right.active {}
+        
+        .icon-bar {
+            height: 3px;
+            color: white;
+        }
+        
+        .btn-primary {
+            color: white;
+            font-size: 70%;
+        }
     }
 
-}
-    
     </style>
 </head>
+
 <body>
 
 
 
-    
-<nav class="navbar navbar-fixed-top navbar-inverse">
-     <div class="container-fluid">
-             <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+
+    <nav class="navbar navbar-fixed-top navbar-inverse">
+        <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>                        
       </button>
-      <a class="navbar-brand" href="#">Family Chat</a>
-    </div>
-         
-        <div  class="collapse navbar-collapse" id="myNavbar">
-            <ul class="nav navbar-nav navbar-right">
-            <li  class="navbar-text"><span id="sessionname"></span>
-            </li><li class="navbar-text">Welcome <span id="username"></span></li>
-            <li><a href="/logout">Logout</a></li></ul></div>
-       </div>
-    </nav><!-- /.navbar -->    
-    
-<div class="container-fluid">
-   
-    <div class="row row-offcanvas row-offcanvas-right">
-        <div class="col-xs-12 col-sm-9 col-sm-push-3">
+            <a class="navbar-brand" href="#">Family Chat</a>
+        </div>
         
-         <p class="pull-right visible-xs ">
-            <button type="button" class="btn  btn-primary" data-toggle="offcanvas" title="Toggle sidebar">
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="navbar-text"><span id="sessionname"></span>
+                    </li>
+                    <li class="navbar-text">Welcome <span id="username"></span></li>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- /.navbar -->
+
+    <div class="container-fluid">
+
+        <div class="row row-offcanvas row-offcanvas-right">
+            <div class="col-xs-12 col-sm-9 col-sm-push-3">
+
+                <p class="pull-right visible-xs ">
+                    <button type="button" class="btn  btn-primary" data-toggle="offcanvas" title="Toggle sidebar">
              Menu<i class="fa fa-chevron-left"></i>  
             </button>
-          </p>
-          
-           <div class="row">
-              <h4>Leave a Comment:</h4>
-                <form role="form" method="post" action="/postmessage">
-                <div class="form-group col-sm-9">
-                  <input type="hidden" id="sessionid" name="sessionid" value="<%= sessionid %>">
-                  <input type="hidden" id="sessionuserid" name="sessionuserid" value="<%= sessionuserid %>">
-                     
-                  <textarea id="message" name="message" class="form-control" rows="3" required></textarea>
+                </p>
+
+                <div class="row">
+                    <h4>Leave a Comment:</h4>
+                    <form role="form" method="post" action="/postmessage">
+                        <div class="form-group col-sm-9">
+                            <input type="hidden" id="sessionid" name="sessionid" value="<%= sessionid %>">
+                            <input type="hidden" id="sessionuserid" name="sessionuserid" value="<%= sessionuserid %>">
+
+                            <textarea id="message" name="message" class="form-control" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group col-sm-3"><button id="sendcomment" type="button" class="btn btn-success">Submit</button></div>
+                    </form>
+
                 </div>
-                <div class="form-group col-sm-3"><button id="sendcomment" type="button" class="btn btn-success" >Submit</button></div>
-              </form>
 
-              </div> 
-
-            <div  class="row">   
-              <div class="panel">
-              <p><span id="numMessages" class="badge"></span> Messages:</p>
-              </div>
-            <!-- This is the section that contains all the messages -->    
-              <div id="messages" class="well well-sm pre-scrollable">
+                <div class="row">
+                    <div class="panel">
+                        <p><span id="numMessages" class="badge"></span> Messages:</p>
+                    </div>
+                    <!-- This is the section that contains all the messages -->
+                    <div id="messages" class="well well-sm pre-scrollable">
 
 
-            </div>    
-        
+                    </div>
+
+                </div>
             </div>
+
+
+            <div class="col-xs-6 col-sm-3 col-sm-pull-9 " id="sidebar">
+                <ul id="menu-content" class="nav nav-pills nav-stacked">
+                    <li class="active"><a href="#section1">Home</a></li>
+                    <li class="active"><a href="#section2">Chat Members</a>
+
+                        <ul id="friends" class="nav nav-pills nav-stacked">
+
+                        </ul>
+                        <br>
+                    </li>
+                    <li class="active"><a href="">Add Member</a>
+                        <ul id="otherfriends" class="nav nav-pills nav-stacked">
+                        </ul>
+                        <br></li>
+                    <li class="active"><a href="/joinchat">Leave Chat</a></li>
+                </ul>
+                <script>
+                    function addFriend(userid) {
+                        var url = "/addsessionfriend";
+                        var sessionid = $('#sessionid').val();
+                        var xhttp = new XMLHttpRequest();
+                        xhttp.open("POST", url, true);
+                        xhttp.setRequestHeader("Content-Type", "application/json");
+                        xhttp.send(JSON.stringify({
+                            "sessionid": sessionid,
+                            "userid": userid
+                        }));
+                        xhttp.onreadystatechange = function() {
+                            if (this.readyState == 4 && this.status == 200) {
+                                console.log(xhttp.response);
+                                location.reload();
+                            }
+                        }
+                    }
+
+                </script>
+
             </div>
-       
-      
-      <div class="col-xs-6 col-sm-3 col-sm-pull-9 sidebar-offcanvas" id="sidebar">
-        <ul id="menu-content" class="nav nav-pills nav-stacked">
-            <li class="active"><a href="#section1">Home</a></li>
-        <li class="active"><a href="#section2">Chat Members</a>
-          
-          <ul id="friends" class="nav nav-pills nav-stacked">
-           
-            </ul>
-            <br>
-            </li>
-            <li class="active"><a href="">Add Member</a>
-             <ul id="otherfriends" class="nav nav-pills nav-stacked">
-            </ul>
-            <br></li>
-        <li class="active"><a href="/joinchat">Leave Chat</a></li>
-        </ul>
-          <script>
-              
-function addFriend(userid){
-    var url="/addsessionfriend";   
-    var sessionid = $('#sessionid').val();
-    var xhttp=new XMLHttpRequest();
-      xhttp.open("POST", url, true);   
-      xhttp.setRequestHeader( "Content-Type", "application/json");
-      xhttp.send(JSON.stringify(
-          {"sessionid": sessionid,
-           "userid": userid}));
-      xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-              console.log(xhttp.response);
-            location.reload(); 
-      }
-  }
-}      
-          
-          </script>
-          
+            <!-- BELOW is the end of the whole page's div -->
+
+        </div>
+        <!-- BELOW is the end of the entire comment section div -->
     </div>
-   <!-- BELOW is the end of the whole page's div -->
 
-     </div>
-         <!-- BELOW is the end of the entire comment section div -->
-    </div>  
-    
- <!-- BELOW is the end of the fluidcontainer div -->    
-<script>
-   
-    
-$(document).ready(function () {
-    //var ws = new WebSocket('ws://localhost:8080');
-    
-    
-    
-  
-    
-    var HOST = location.origin.replace(/^http/, 'ws')
-    var ws = new WebSocket(HOST);
-    //var el = document.getElementById('server-time');
+    <!-- BELOW is the end of the fluidcontainer div -->
+    <script>
+        $(document).ready(function() {
+            //var ws = new WebSocket('ws://localhost:8080');
 
 
-    ws.onopen = function() {
-        console.log('Connected');
-    };
-    
-     ws.onmessage = function(msg) {
-        console.log('Received message from server: ' + msg.data);
-         //here is where the new data for the page will be added
-         //alert(msg.data);
-        if (msg.data == "update") {
-            //alert(msg.data);
-            //wait a couple seconds for update to take place, and then update
-            wait(2000);
-            loadDoc(("/getmessages?id="+ $('#sessionid').val()) , loadMessages);
-        }
-         
-    }
 
-    function addMessage(message) {
-        content.prepend('<p><span>' + message + '</span></p>');
-    }    
 
-    function sendReceiveMessage(){
-        ws.send('update');
-     } 
-    
-//    $('#test').click(function() {
-//        //alert("button clicked");
-//        ws.send('update');
-//    });
-//    
-    
-  $('[data-toggle="offcanvas"]').click(function () {
-    $('.row-offcanvas').toggleClass('active')
-  });
-    
-  
-    function wait(ms){
-   var start = new Date().getTime();
-   var end = start;
-   while(end < start + ms) {
-     end = new Date().getTime();
-  }
-}
-    
-    
-$('#sendcomment').click(function() {
-    ws.send('update');
-//alert("button clicked");
-  var url;
-  var xhttp=new XMLHttpRequest();
-  var sessionuserid= $('#sessionuserid').val();
-  var sessionid= $('#sessionid').val(); 
-  var message=$('#message').val();
-    //alert(message);
-    url="/postmessage";   
-  xhttp.open("POST", url, true);   
-  xhttp.setRequestHeader( "Content-Type", "application/json");
-  xhttp.send(JSON.stringify(
-      {"sessionuserid":sessionuserid, 
-       "sessionid": sessionid,
-       "message": message}));
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-            var messages = JSON.parse(this.response);
-            var myhtml = "";
-            //alert(messages);
-            $('#messages').html("");
-            var numMessages = messages.length;
-            $('#numMessages').text(numMessages);
-            $.each(messages, function(i, message) {
-                if (message.sessionuserid == sessionuserid){
-                  paneltype = 'panel-success';
-                    } else {
-                        paneltype = 'panel-warning';
-                    }
-                        
-            myhtml = '<div class="panel  ' + paneltype + '"> <div class="panel-body "><div class="col-sm-10">' +
-                          '<h4>' + message.fname + ' ' + message.lname + ' <small>' + message.messagedatetime + '</small></h4>' +
-                          '<p>' + message.messagetext + '</p><br></div></div></div>';
-            
-                //alert(myhtml);
-                $('#messages').prepend(myhtml);
-        
+
+            var HOST = location.origin.replace(/^http/, 'ws')
+            var ws = new WebSocket(HOST);
+            //var el = document.getElementById('server-time');
+
+
+            ws.onopen = function() {
+                console.log('Connected');
+            };
+
+            ws.onmessage = function(msg) {
+                console.log('Received message from server: ' + msg.data);
+                //here is where the new data for the page will be added
+                //alert(msg.data);
+                if (msg.data == "update") {
+                    //alert(msg.data);
+                    //wait a couple seconds for update to take place, and then update
+                    wait(2000);
+                    loadDoc(("/getmessages?id=" + $('#sessionid').val()), loadMessages);
+                }
+
+            }
+
+            function addMessage(message) {
+                content.prepend('<p><span>' + message + '</span></p>');
+            }
+
+            function sendReceiveMessage() {
+                ws.send('update');
+            }
+
+            //    $('#test').click(function() {
+            //        //alert("button clicked");
+            //        ws.send('update');
+            //    });
+            //    
+
+            $('[data-toggle="offcanvas"]').click(function() {
+                $('.row-offcanvas').toggleClass('active')
             });
-        $('#message').val("");
-          // action goes here
-          console.log(xhttp.response);
-      }
-  }
-  
-  //xhttp.send();
-    
-});
 
- 
-//AJAX REQUESTS    
-loadDoc(("/getmessages?id="+ $('#sessionid').val()) , loadMessages);
-loadDoc(("/getsessionfriends?sessionid="+ $('#sessionid').val()), loadFriends); 
-loadDoc(("/getsessiondata?sessionuserid=" + $('#sessionuserid').val()), loadUserSession );    
 
-//loadDoc("url-2", myFunction2);
+            function wait(ms) {
+                var start = new Date().getTime();
+                var end = start;
+                while (end < start + ms) {
+                    end = new Date().getTime();
+                }
+            }
 
-function loadDoc(url, cFunction) {
-  var xhttp;
-  xhttp=new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      cFunction(this);
-    }
- };
-  xhttp.open("GET", url, true);
-  xhttp.send();
-}
 
-    
-  
-    
-function loadUserSession(xhttp){
-    var data = JSON.parse(xhttp.response);
-    $('#username').text(data.fname + ' ' + data.lname);
-    $('#sessionname').text(data.sessionname);
-    
-}    
-    
-function loadFriends(xhttp){
-    var friends = JSON.parse(xhttp.response);
-    var myhtml = "";
-     var sessionuserid= $('#sessionuserid').val();
-    //alert(messages);
-    
-    $('#friends').empty();
-    
-    $.each(friends, function(i, friend) {
-        if (friend.insession ==0){
-            myhtml = '<button class="list-group-item" onclick="addFriend(' + friend.userid + ')">' + friend.fname + ' ' + friend.lname + '</button>';            
-            $('#otherfriends').prepend(myhtml);
-        } else {
-            myhtml = '<li class="list-group-item">' + friend.fname + ' ' + friend.lname + '</li>';
-            $('#friends').prepend(myhtml);
-        }               
-        
-    });
-  // action goes here
-    console.log(xhttp.response);
-    
-}    
-    
-function loadMessages(xhttp) {
-    var messages = JSON.parse(xhttp.response);
-    var myhtml = "";
-     var sessionuserid= $('#sessionuserid').val();
-    //alert(messages);
-    var numMessages = messages.length;
-    $('#messages').html("");
-    $('#numMessages').text(numMessages);
-    $.each(messages, function(i, message) {
-       if (message.sessionuserid == sessionuserid){
-                  paneltype = 'panel-success';
+            $('#sendcomment').click(function() {
+                ws.send('update');
+                //alert("button clicked");
+                var url;
+                var xhttp = new XMLHttpRequest();
+                var sessionuserid = $('#sessionuserid').val();
+                var sessionid = $('#sessionid').val();
+                var message = $('#message').val();
+                //alert(message);
+                url = "/postmessage";
+                xhttp.open("POST", url, true);
+                xhttp.setRequestHeader("Content-Type", "application/json");
+                xhttp.send(JSON.stringify({
+                    "sessionuserid": sessionuserid,
+                    "sessionid": sessionid,
+                    "message": message
+                }));
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var messages = JSON.parse(this.response);
+                        var myhtml = "";
+                        //alert(messages);
+                        $('#messages').html("");
+                        var numMessages = messages.length;
+                        $('#numMessages').text(numMessages);
+                        $.each(messages, function(i, message) {
+                            if (message.sessionuserid == sessionuserid) {
+                                paneltype = 'panel-success';
+                            } else {
+                                paneltype = 'panel-warning';
+                            }
+
+                            myhtml = '<div class="panel  ' + paneltype + '"> <div class="panel-body "><div class="col-sm-10">' +
+                                '<h4>' + message.fname + ' ' + message.lname + ' <small>' + message.messagedatetime + '</small></h4>' +
+                                '<p>' + message.messagetext + '</p><br></div></div></div>';
+
+                            //alert(myhtml);
+                            $('#messages').prepend(myhtml);
+
+                        });
+                        $('#message').val("");
+                        // action goes here
+                        console.log(xhttp.response);
+                    }
+                }
+
+                //xhttp.send();
+
+            });
+
+
+            //AJAX REQUESTS    
+            loadDoc(("/getmessages?id=" + $('#sessionid').val()), loadMessages);
+            loadDoc(("/getsessionfriends?sessionid=" + $('#sessionid').val()), loadFriends);
+            loadDoc(("/getsessiondata?sessionuserid=" + $('#sessionuserid').val()), loadUserSession);
+
+            //loadDoc("url-2", myFunction2);
+
+            function loadDoc(url, cFunction) {
+                var xhttp;
+                xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        cFunction(this);
+                    }
+                };
+                xhttp.open("GET", url, true);
+                xhttp.send();
+            }
+
+
+
+
+            function loadUserSession(xhttp) {
+                var data = JSON.parse(xhttp.response);
+                $('#username').text(data.fname + ' ' + data.lname);
+                $('#sessionname').text(data.sessionname);
+
+            }
+
+            function loadFriends(xhttp) {
+                var friends = JSON.parse(xhttp.response);
+                var myhtml = "";
+                var sessionuserid = $('#sessionuserid').val();
+                //alert(messages);
+
+                $('#friends').empty();
+
+                $.each(friends, function(i, friend) {
+                    if (friend.insession == 0) {
+                        myhtml = '<button class="list-group-item" onclick="addFriend(' + friend.userid + ')">' + friend.fname + ' ' + friend.lname + '</button>';
+                        $('#otherfriends').prepend(myhtml);
+                    } else {
+                        myhtml = '<li class="list-group-item">' + friend.fname + ' ' + friend.lname + '</li>';
+                        $('#friends').prepend(myhtml);
+                    }
+
+                });
+                // action goes here
+                console.log(xhttp.response);
+
+            }
+
+            function loadMessages(xhttp) {
+                var messages = JSON.parse(xhttp.response);
+                var myhtml = "";
+                var sessionuserid = $('#sessionuserid').val();
+                //alert(messages);
+                var numMessages = messages.length;
+                $('#messages').html("");
+                $('#numMessages').text(numMessages);
+                $.each(messages, function(i, message) {
+                    if (message.sessionuserid == sessionuserid) {
+                        paneltype = 'panel-success';
                     } else {
                         paneltype = 'panel-warning';
                     }
-                        
-            myhtml = '<div class="panel  ' + paneltype + '"> <div class="panel-body "><div class="col-sm-10">' +
-                          '<h4>' + message.fname + ' ' + message.lname + ' <small>' + message.messagedatetime + '</small></h4>' +
-                          '<p>' + message.messagetext + '</p><br></div></div></div>';
-            
-                //alert(myhtml);
-                $('#messages').prepend(myhtml);
-    });
-  // action goes here
-    console.log(xhttp.response);
-        
-}
-    
-    
-function myFunction2(xhttp) {
-  // action goes here
-}    
-    
-    
-    
-});
+
+                    myhtml = '<div class="panel  ' + paneltype + '"> <div class="panel-body "><div class="col-sm-10">' +
+                        '<h4>' + message.fname + ' ' + message.lname + ' <small>' + message.messagedatetime + '</small></h4>' +
+                        '<p>' + message.messagetext + '</p><br></div></div></div>';
+
+                    //alert(myhtml);
+                    $('#messages').prepend(myhtml);
+                });
+                // action goes here
+                console.log(xhttp.response);
+
+            }
 
 
-    
-    </script>    
+            function myFunction2(xhttp) {
+                // action goes here
+            }
 
-<footer class="container-fluid">
-  <p></p>
-</footer>
+
+
+        });
+
+    </script>
+
+    <footer class="container-fluid">
+        <p></p>
+    </footer>
 
 </body>
+
 </html>
